@@ -86,11 +86,8 @@ class Message(Resource):
                 message.text = text
                 message.edited_date = datetime.datetime.utcnow()
                 message.is_edited = True
-                # try:
                 message.save_to_db()
                 return message.json(user_id), 200
-                # except:
-                #     return {"error": "Error while saving message to db"}, 500
             else:
                 return {'error': "This user is not allowed to edit this message"}, 401
         else:
