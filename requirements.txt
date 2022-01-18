@@ -1,0 +1,15 @@
+Flask
+Flask-RESTful
+Flask-JWT-Extended==3.18.0
+Flask-SQLAlchemy
+Flask-Migrate==2.5.3
+Flask-Script
+uwsgi
+psycopg2
+SQLAlchemy-ImageAttach
+pyrebase
+firebase-admin
+tinify
+pyfcm
+urllib3
+pyrebase
