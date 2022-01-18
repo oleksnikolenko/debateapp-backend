@@ -7,8 +7,6 @@ from models.reply import ReplyModel
 from models.user import UserModel
 from pyfcm import FCMNotification
 
-push_service = FCMNotification(api_key="AAAAPZu__aA:APA91bGoAzc28Omj4zsSHI4p2GujaykOuKP4zbXDkc0P8UIKPkXvSahhv7QNbgO-nhu9ev4_kYjwlEsiPucmXR0y7cTUrN0BMzI61Snf6lzudR7Gkz0ki6zMCvLvjs7pliDKSLj_RQ7p")
-
 
 class Message(Resource):
     parser = reqparse.RequestParser()
@@ -21,13 +19,6 @@ class Message(Resource):
     def post(self):
         data = Message.parser.parse_args()
 
-########
-        registration_id = "et_dYrsVf0FEni85bcyXjE:APA91bGxSZbz4jHEvCnZjsO4xcs1uGCbN7xx7xMDMhpW25kBOSrODAOpB17fLrv0WEa6D7nUL6fYrnDUIScQCz716Rfn_QAjY7F_YjrZkfRldq8tS5Gg_5JjatgKC6MFJMOX30gsUbgB"
-        message_title = "Test push notification"
-        message_body = "It works"
-        result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
-        print("CHECK")
-########  
         user_uid = get_jwt_identity()
         user = UserModel.find_by_firebase_uid(user_uid)
 
@@ -35,29 +26,6 @@ class Message(Resource):
 
         if thread_id:
             reply = ReplyModel(data['text'], user.id, thread_id)
-            # TODO: Find parent message and send push
-            #parent_message = MessageModel.find_by_id(thread_id)
-            #user_push_token = parent_message.user.push_token
-
-            # {
-            #     "to" : "dsjfsdlkfjdksjglkjoi43jig3j4",
-            #     "collapse_key": "type_a",
-            #     "content-available": true,
-            #     "notification": {
-            #         "title": "Someone has replied to you: ",
-            #         "body": data['text']
-            #     },
-            #     "data": {
-            #         "debate_id": data['debate_id']
-            #     }
-            # }
-
-            # registration_id = "e6KtclvYdklimcK1PDOEGE:APA91bF4vHHQNBXCW5J-TzyuSl4EY4gai5G1N2qAUTleYv9aHTiKs6mNWexanM8PfBXhHFdBgadHbNdJdq75YkoMXKDNEJ2DeN3kd_4VsAw_lcZvgExQyc_HZtXzH5j3ToRUuO9dgPD_"
-            # message_title = "Привет Артем"
-            # message_body = "Только что ты получил первый пуш, поздравляю"
-            # result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
-            
-            
             reply.save_to_db()
             return reply.json(user.id), 201
         else:
